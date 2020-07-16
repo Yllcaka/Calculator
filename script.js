@@ -66,7 +66,10 @@ function backSpace() {
     if (calculatorDisplay.textContent.length < 1) calculatorDisplay.textContent = 0;
 }
 
-
+function fontDisplayLenght(part) {
+    console.log(part.textContent.length);
+    if (part.textContent.length > 18) part.style.fontSize = "16px";
+}
 function sum(first, ...args) {
     return args.reduce((total, current) => {
         return total + current;
@@ -119,6 +122,7 @@ function operate(operator, first, ...args) {
 [...buttonsAll].filter(operator => Object.values(operators).includes(operator.textContent.trim()))
     .forEach(operator => {
         operator.addEventListener("click", () => {
+
             currentOperation = operator.textContent.trim();
             currentNumber = calculatorDisplay.textContent;
             calculatorDisplay.textContent = 0;
@@ -165,6 +169,7 @@ body.addEventListener('keydown', (e) => {
 numbers.forEach(number => {
     number.addEventListener('click', () => {
         checkIfZero();
+        fontDisplayLenght(calculatorDisplay);
         if (calculatorDisplay.textContent.includes(".")) return;
         calculatorDisplay.textContent += number.textContent.trim();
     })
