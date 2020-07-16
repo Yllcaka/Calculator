@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculator</title>
     <link rel="stylesheet" href="style.css">
+    <script src="calculation.js" async></script>
     <script src="script.js" async></script>
+
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 
@@ -73,7 +75,7 @@
             </div>
 
             <div class="operators">
-                <div class="num-button">
+                <div id="change-sign" class="num-button">
                     <div class="num-button-content">+/-</div>
                 </div>
 
@@ -96,7 +98,7 @@
                 <div class="num-button">
                     <div class="num-button-content">&#247</div>
                 </div>
-                <div class="num-button equal">
+                <div id="equal" class="num-button">
                     <div class="num-button-content">=</div>
                 </div>
             </div>

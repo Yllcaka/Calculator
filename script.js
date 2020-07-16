@@ -1,26 +1,14 @@
 var body = document.querySelector("body");
-// var numbers = ["C",".",7,8,
-//                 9,"/",4,5,
-//                 6,"*",1,2,
-//                 3,"-","C",0,
-//                 "."];
-
 var numPad = document.querySelector(".num-pad");
 var calculatorDisplay = document.querySelector("#result");
 var calculation = document.querySelector("#calculation");
 var buttonsAll = document.querySelectorAll('.num-button');
 var clearButton = document.querySelector('#clear');
 var backSpaceButton = document.querySelector('#back-space');
+var equal = document.querySelector('#equal');
+var changeSign = document.querySelector('#change-sign');
+var currentOperation = "+"
 
-var currentNumber = 0;
-
-
-var numbers = [...buttonsAll].filter(element => !isNaN(parseInt(element.textContent.trim())));
-console.log(numbers);
-
-function checkIfZero() {
-    if (calculatorDisplay.textContent.trim() == "0") calculatorDisplay.textContent = "";
-}
 
 
 const keyBoardNumbers = {
@@ -48,62 +36,35 @@ const keyBoardNumbers = {
     190: "."
 
 };
-function backSpace() {
-    let length = calculatorDisplay.textContent.length;
-    calculatorDisplay.textContent = calculatorDisplay.textContent.slice(0, length - 1);
-}
+
 const keyBoardValues = {
     8: backSpace
 }
-const operators = ["+", "-", "÷", "*"];
-// [...buttonsAll].map(element => console.log(element.textContent.trim(), element.textContent.trim() in operators));
-[...buttonsAll].filter(operator => operators.includes(operator.textContent.trim()))
-    .forEach(operator => {
-        operator.addEventListener("click", () => {
-            let found = operators.some(element => calculation.textContent.includes(element));
-            if (!found) {
-                calculation.textContent += `${parseFloat(currentNumber)} ${operator.textContent}`
-            }
-
-
-            console.log(operator.textContent.trim());
-            calculatorDisplay.textContent = operate(operator.textContent.trim(), currentNumber, calculatorDisplay.textContent);
-            currentNumber = calculatorDisplay.textContent;
-        })
-    });
-
-clearButton.addEventListener('click', () => {
-    calculation.textContent = "";
-    calculatorDisplay.textContent = 0;
-    currentNumber = 0;
-})
-backSpaceButton.addEventListener('click', backSpace);
+const operators = {
+    107: "+",
+    109: "-",
+    111: "÷",
+    106: "*"
+};
 
 
 
-body.addEventListener('keydown', (e) => {
+var currentOperation = "+";
+var currentNumber = 0;
 
-    if (e.keyCode in keyBoardNumbers) {
-        checkIfZero()
-        if (calculatorDisplay.textContent.includes(".") && (e.keyCode == 190 || e.keyCode == 110)) return;
-        calculatorDisplay.textContent += keyBoardNumbers[e.keyCode];
+var numbers = [...buttonsAll].filter(element => !isNaN(parseInt(element.textContent.trim())));
+console.log(numbers);
 
-    }
-    else if (e.keyCode in keyBoardValues) {
-        checkIfZero()
-        keyBoardValues[e.keyCode]();
-    }
-});
-
-numbers.forEach(number => {
-    number.addEventListener('click', () => {
-        checkIfZero();
-        if (calculatorDisplay.textContent.includes(".")) return;
-        calculatorDisplay.textContent += number.textContent.trim();
-    })
-})
+function checkIfZero() {
+    if (calculatorDisplay.textContent.trim() == "0") calculatorDisplay.textContent = "";
+}
 
 
+function backSpace() {
+    let length = calculatorDisplay.textContent.length;
+    calculatorDisplay.textContent = calculatorDisplay.textContent.slice(0, length - 1);
+    if (calculatorDisplay.textContent.length < 1) calculatorDisplay.textContent = 0;
+}
 
 
 function sum(first, ...args) {
@@ -151,3 +112,70 @@ function operate(operator, first, ...args) {
     return rv;
 
 }
+
+
+
+
+[...buttonsAll].filter(operator => Object.values(operators).includes(operator.textContent.trim()))
+    .forEach(operator => {
+        operator.addEventListener("click", () => {
+            currentOperation = operator.textContent.trim();
+            currentNumber = calculatorDisplay.textContent;
+            calculatorDisplay.textContent = 0;
+            // calculation.textContent += `${parseFloat(currentNumber)} ${operator.textContent}`
+
+            // console.log(operator.textContent.trim());
+            // calculatorDisplay.textContent = operate(operator.textContent.trim(), currentNumber, calculatorDisplay.textContent);
+            // currentNumber = calculatorDisplay.textContent;
+        })
+    });
+
+clearButton.addEventListener('click', () => {
+    calculation.textContent = "";
+    calculatorDisplay.textContent = 0;
+    currentNumber = 0;
+})
+backSpaceButton.addEventListener('click', backSpace);
+
+
+
+body.addEventListener('keydown', (e) => {
+
+    if (e.keyCode in keyBoardNumbers) {
+        checkIfZero()
+        if (calculatorDisplay.textContent.includes(".") && (e.keyCode == 190 || e.keyCode == 110)) return;
+        calculatorDisplay.textContent += keyBoardNumbers[e.keyCode];
+
+    }
+    else if (e.keyCode in keyBoardValues) {
+        checkIfZero()
+        keyBoardValues[e.keyCode]();
+    }
+    else if (e.keyCode in operators) {
+        currentOperation = operators[e.keyCode];
+        //calculation.textContent += `${parseFloat(currentNumber)} ${operator.textContent}`
+
+        // console.log(operator.textContent.trim());
+
+        calculatorDisplay.textContent = operate(operators[e.keyCode], currentNumber, calculatorDisplay.textContent);
+        currentNumber = calculatorDisplay.textContent;
+    }
+});
+
+numbers.forEach(number => {
+    number.addEventListener('click', () => {
+        checkIfZero();
+        if (calculatorDisplay.textContent.includes(".")) return;
+        calculatorDisplay.textContent += number.textContent.trim();
+    })
+})
+
+equal.addEventListener('click', () => {
+
+    calculatorDisplay.textContent = operate(currentOperation, currentNumber, calculatorDisplay.textContent);
+    currentNumber = calculatorDisplay.textContent;
+
+})
+changeSign.addEventListener('click', () => {
+    calculatorDisplay.textContent = -calculatorDisplay.textContent;
+})

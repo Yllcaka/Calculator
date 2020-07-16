@@ -27,9 +27,10 @@ hr{
 #calculation{
     height: 25px;
     color:#9772b0;
+    /* font-size: 12px; */
 }
 #result{
-    font-size: 24px;
+    font-size: 30px;
 }
 .content-changers{
     display: flex;
@@ -74,6 +75,7 @@ hr{
     color: white;
     font-weight: 700;
     transition: 0.2s ease-in-out;
+    cursor: pointer;
     
 }
 .num-button:hover{
@@ -98,7 +100,7 @@ hr{
 .num-button-content{
 
 }
-.equal{
+#equal{
     flex-grow: 3.3;
 }
 
