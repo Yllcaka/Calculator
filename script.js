@@ -8,7 +8,7 @@ var backSpaceButton = document.querySelector('#back-space');
 var equal = document.querySelector('#equal');
 var changeSign = document.querySelector('#change-sign');
 var currentOperation = "+"
-
+var operationSign = document.querySelector("#operation-sign");
 
 
 const keyBoardNumbers = {
@@ -51,6 +51,8 @@ const operators = {
 
 var currentOperation = "+";
 var currentNumber = 0;
+var secondNumber = 0;
+var equalUsed = false;
 
 var numbers = [...buttonsAll].filter(element => !isNaN(parseInt(element.textContent.trim())));
 console.log(numbers);
@@ -66,9 +68,16 @@ function backSpace() {
     if (calculatorDisplay.textContent.length < 1) calculatorDisplay.textContent = 0;
 }
 
+function equalUsage() {
+    fontDisplayLenght(calculatorDisplay);
+    calculatorDisplay.textContent = operate(currentOperation, currentNumber, calculatorDisplay.textContent);
+    currentNumber = calculatorDisplay.textContent;
+    calculation.textContent = currentNumber;
+}
+
 function fontDisplayLenght(part) {
     console.log(part.textContent.length);
-    if (part.textContent.length > 18) part.style.fontSize = "16px";
+    if (part.textContent.length > 15) part.style.fontSize = "16px";
 }
 function sum(first, ...args) {
     return args.reduce((total, current) => {
@@ -105,7 +114,7 @@ function operate(operator, first, ...args) {
         case "*":
             rv = multiply(first, ...args);
             break;
-        case "/":
+        case "÷":
             rv = division(first, ...args);
             break;
         default:
@@ -117,27 +126,25 @@ function operate(operator, first, ...args) {
 }
 
 
+function operationChange(operation) {
+    operationSign.textContent = operation;
+    currentOperation = operation;
+    currentNumber = calculatorDisplay.textContent;
+    calculatorDisplay.textContent = 0;
+    calculation.textContent = currentNumber;
+}
 
 
 [...buttonsAll].filter(operator => Object.values(operators).includes(operator.textContent.trim()))
     .forEach(operator => {
-        operator.addEventListener("click", () => {
-
-            currentOperation = operator.textContent.trim();
-            currentNumber = calculatorDisplay.textContent;
-            calculatorDisplay.textContent = 0;
-            // calculation.textContent += `${parseFloat(currentNumber)} ${operator.textContent}`
-
-            // console.log(operator.textContent.trim());
-            // calculatorDisplay.textContent = operate(operator.textContent.trim(), currentNumber, calculatorDisplay.textContent);
-            // currentNumber = calculatorDisplay.textContent;
-        })
+        operator.addEventListener("click", () => operationChange(operator.textContent.trim()));
     });
 
 clearButton.addEventListener('click', () => {
     calculation.textContent = "";
     calculatorDisplay.textContent = 0;
     currentNumber = 0;
+    secondNumber = 0;
 })
 backSpaceButton.addEventListener('click', backSpace);
 
@@ -156,14 +163,10 @@ body.addEventListener('keydown', (e) => {
         keyBoardValues[e.keyCode]();
     }
     else if (e.keyCode in operators) {
-        currentOperation = operators[e.keyCode];
-        //calculation.textContent += `${parseFloat(currentNumber)} ${operator.textContent}`
+        operationChange(operators[e.keyCode]);
 
-        // console.log(operator.textContent.trim());
-
-        calculatorDisplay.textContent = operate(operators[e.keyCode], currentNumber, calculatorDisplay.textContent);
-        currentNumber = calculatorDisplay.textContent;
     }
+    else if (e.keyCode == 13) equalUsage();
 });
 
 numbers.forEach(number => {
@@ -175,12 +178,8 @@ numbers.forEach(number => {
     })
 })
 
-equal.addEventListener('click', () => {
+equal.addEventListener('click', () => equalUsage());
 
-    calculatorDisplay.textContent = operate(currentOperation, currentNumber, calculatorDisplay.textContent);
-    currentNumber = calculatorDisplay.textContent;
-
-})
 changeSign.addEventListener('click', () => {
     calculatorDisplay.textContent = -calculatorDisplay.textContent;
 })

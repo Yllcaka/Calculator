@@ -4,8 +4,22 @@ body{
 }
 
 hr{
+    /* flex: 1; */
+    width: 90%;
     color: #53294c;
 }
+
+.line{
+    display: flex;
+    align-items: center
+}
+
+.line span{
+
+    color: black;
+}
+
+
 #calculator{
     width: 400px;
     margin: 50px auto;
