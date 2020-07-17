@@ -12,6 +12,8 @@ var operationSign = document.querySelector("#operation-sign");
 
 
 const keyBoardNumbers = {
+    // Here are the keyboard numbers and the dot(".")
+    // to be used by the keyboard
     96: 0,
     97: 1,
     98: 2,
@@ -41,6 +43,7 @@ const keyBoardValues = {
     8: backSpace
 }
 const operators = {
+    //The operators used by the keyboard
     107: "+",
     109: "-",
     111: "÷",
@@ -51,13 +54,12 @@ const operators = {
 
 var currentOperation = "+";
 var currentNumber = 0;
-var secondNumber = 0;
-var equalUsed = false;
 
 var numbers = [...buttonsAll].filter(element => !isNaN(parseInt(element.textContent.trim())));
-console.log(numbers);
+
 
 function checkIfZero() {
+
     if (calculatorDisplay.textContent.trim() == "0") calculatorDisplay.textContent = "";
 }
 
@@ -69,6 +71,8 @@ function backSpace() {
 }
 
 function equalUsage() {
+    //this is the main function that is used 
+    // to achieve the result of the operation
     fontDisplayLenght(calculatorDisplay);
     calculatorDisplay.textContent = operate(currentOperation, currentNumber, calculatorDisplay.textContent);
     currentNumber = calculatorDisplay.textContent;
@@ -76,31 +80,40 @@ function equalUsage() {
 }
 
 function fontDisplayLenght(part) {
-    console.log(part.textContent.length);
+    //Here if the numbers get too large the fontsize will decrease
+    // so that there won't be any overflow from the calculator
+    // to the main background
     if (part.textContent.length > 15) part.style.fontSize = "16px";
 }
 function sum(first, ...args) {
+    //Function used by the "+" sign
     return args.reduce((total, current) => {
         return total + current;
     }, first);
 }
 function substract(first, ...args) {
+    //Function used by the "+" sign
     return args.reduce((total, current) => {
         return total - current;
     }, first);
 }
 function multiply(first, ...args) {
+    //Function used by the "+" sign
     return args.reduce((total, current) => {
         return total * current;
     }, first);
 }
 function division(first, ...args) {
+    //Function used by the "+" sign
     return args.reduce((total, current) => {
         return total / current;
     }, first);
 }
 
 function operate(operator, first, ...args) {
+    //Here will the operations execute
+    //The function that matches the operator
+    // will be executed
     first = parseFloat(first);
     args = [...args].map(element => parseFloat(element));
     let rv = "";
@@ -127,6 +140,7 @@ function operate(operator, first, ...args) {
 
 
 function operationChange(operation) {
+    // This is to change the operator displayed on the calculator screen
     operationSign.textContent = operation;
     currentOperation = operation;
     currentNumber = calculatorDisplay.textContent;
@@ -137,40 +151,46 @@ function operationChange(operation) {
 
 [...buttonsAll].filter(operator => Object.values(operators).includes(operator.textContent.trim()))
     .forEach(operator => {
+        //Here the functions for each operator are beign assigned
         operator.addEventListener("click", () => operationChange(operator.textContent.trim()));
     });
 
 clearButton.addEventListener('click', () => {
+    //this is for the clear button(C)
     calculation.textContent = "";
     calculatorDisplay.textContent = 0;
     currentNumber = 0;
-    secondNumber = 0;
+
 })
-backSpaceButton.addEventListener('click', backSpace);
+backSpaceButton.addEventListener('click', backSpace);// adding backspace functionality to the backspace button
 
 
 
 body.addEventListener('keydown', (e) => {
-
+    //Using keyboard to enter numbers and operations.
     if (e.keyCode in keyBoardNumbers) {
+        //Entering numbers and dot(".") 
         checkIfZero()
         if (calculatorDisplay.textContent.includes(".") && (e.keyCode == 190 || e.keyCode == 110)) return;
         calculatorDisplay.textContent += keyBoardNumbers[e.keyCode];
 
     }
     else if (e.keyCode in keyBoardValues) {
+        //For backspace
         checkIfZero()
         keyBoardValues[e.keyCode]();
     }
     else if (e.keyCode in operators) {
+        //for operators
         operationChange(operators[e.keyCode]);
 
     }
-    else if (e.keyCode == 13) equalUsage();
+    else if (e.keyCode == 13) equalUsage(); //For getting the result using enter
 });
 
 numbers.forEach(number => {
     number.addEventListener('click', () => {
+        //Giving number buttons on the calculator functionality
         checkIfZero();
         fontDisplayLenght(calculatorDisplay);
         if (calculatorDisplay.textContent.includes(".")) return;
@@ -178,8 +198,9 @@ numbers.forEach(number => {
     })
 })
 
-equal.addEventListener('click', () => equalUsage());
+equal.addEventListener('click', () => equalUsage());//Giving equal button on the calculator functionality
 
 changeSign.addEventListener('click', () => {
+    //changin the operator on the calculator display
     calculatorDisplay.textContent = -calculatorDisplay.textContent;
 })
